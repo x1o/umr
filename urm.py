@@ -22,9 +22,10 @@ line_n = 0
 # memory[2] = 'b'
 
 def die(msg, code=0):
-    print(memory)
+    ret = memory[0]
+    print(ret)
     print(msg)
-    exit(code)
+    exit(ret)
 
 with open(source_filename, 'r') as source_file:
     source = [line for line in source_file.readlines()
@@ -43,12 +44,12 @@ with open(source_filename, 'r') as source_file:
                 memory[register] += 1
                 line_n += 1
             elif command == 't':
-                r1, r2 = [int(r) for r in expression[2:].split('')]
+                r1, r2 = [int(r) for r in expression[2:].split()]
                 # print('<%s> = %s -> <%s> = %s' % (r1, memory[r1], r2, memory[r2]))
                 memory[r2] = memory[r1]
                 line_n += 1
             elif command == 'j':
-                r1, r2, n = [int(r) for r in expression[2:].split('')]
+                r1, r2, n = [int(r) for r in expression[2:].split()]
                 if memory[r1] == memory[r2]:
                     line_n = n
                 else:
