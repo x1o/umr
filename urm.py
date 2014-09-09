@@ -22,12 +22,28 @@ line_n = 0
 # memory[2] = 'b'
 
 def die(msg, code=0):
-    ret = memory[0]
-    print(ret)
     print(msg)
-    exit(ret)
+    try:
+        ret = memory[0]
+        print(ret)
+        exit(ret)
+    except KeyError:
+        exit(-1)
 
 with open(source_filename, 'r') as source_file:
+    for line in (l.strip() for l in source_file):
+        if line == '.code':
+            break
+        if line == '.init':
+            print('=== Initialization ===')
+            line = source_file.readline().strip()
+            while line and not line.startswith('#') and line != '.code':
+                register, value = [int(w) for w in line.split()]
+                print('%s <- %s' % (register, value))
+                memory[register] = value
+                line = source_file.readline().strip()
+
+    print('=== Main program ===')
     source = [line for line in source_file.readlines()
                 if line.strip() and not line.startswith('#') ]
     while line_n < len(source):
@@ -57,5 +73,5 @@ with open(source_filename, 'r') as source_file:
             else:
                 raise SyntaxError('unknown command %s, line %s' % (command, line_n))
         except KeyError:
-            die('an uninitialized register has been referenced')
+            die('an uninitialized register has been referenced with %s' % expression)
     die('eof')
