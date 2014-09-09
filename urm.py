@@ -57,7 +57,7 @@ with open(source_filename, 'r') as source_file:
                 line_n += 1
             elif command == 's':
                 register = int(expression[2:])
-                memory[register] += 1
+                memory[register] = memory[register] + 1 if register in memory else 1
                 line_n += 1
             elif command == 't':
                 r1, r2 = [int(r) for r in expression[2:].split()]
